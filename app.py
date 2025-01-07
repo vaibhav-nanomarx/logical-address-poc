@@ -3,10 +3,29 @@ from bs4 import BeautifulSoup
 import lxml.html
 from lxml import etree
 
+
 def extract_with_css(html_content, selector):
+    """
+    Extract content or attributes from HTML using an enhanced CSS selector.
+    If the selector includes '@attribute', extract the specified attribute.
+    """
     soup = BeautifulSoup(html_content, 'html.parser')
-    elements = soup.select(selector)
-    return [element.get_text(strip=True) for element in elements]
+    
+    if '@' in selector:
+        base_selector, attribute = selector.split('@')
+        base_selector = base_selector.strip()
+        attribute = attribute.strip()
+        
+        elements = soup.select(base_selector)
+
+        return [
+            element.get(attribute)
+            for element in elements
+            if element.get(attribute) is not None
+        ]
+    else:
+        elements = soup.select(selector)
+        return [element.get_text(strip=True) for element in elements]
 
 def extract_with_xpath(html_content, xpath_expr):
     try:
