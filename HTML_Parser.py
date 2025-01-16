@@ -11,6 +11,7 @@ def parse_html(element):
         "URL": element.get("href", ""),
         "SRC": element.get("src", ""),
         "ALT": element.get("alt", ""),
+        "CONTENT": element.text.strip() if element.text else "",
         "CHILDREN": []
     }
     for child in element.find_all(recursive=False):
